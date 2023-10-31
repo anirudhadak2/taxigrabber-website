@@ -1,0 +1,143 @@
+Started by user anirudha
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/lib/jenkins/workspace/test2
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Git Clone)
+[Pipeline] git
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/test2/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/anirudhadak2/taxigrabber-website.git # timeout=10
+Fetching upstream changes from https://github.com/anirudhadak2/taxigrabber-website.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.25.1'
+ > git fetch --tags --force --progress -- https://github.com/anirudhadak2/taxigrabber-website.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+Checking out Revision de83b5cb2b38e2543c91c93a81612fa10b77b079 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f de83b5cb2b38e2543c91c93a81612fa10b77b079 # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git branch -D master # timeout=10
+ > git checkout -b master de83b5cb2b38e2543c91c93a81612fa10b77b079 # timeout=10
+Commit message: "Update docker-compose.yaml"
+ > git rev-list --no-walk 03986ac8ea4d928b93052c532c217cc84697dc0d # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Create Docker Image)
+[Pipeline] echo
+Build and Test
+[Pipeline] withCredentials
+Masking supported pattern matches of $dockerHubPass
+[Pipeline] {
+[Pipeline] sh
+Warning: A secret was passed to "sh" using Groovy String interpolation, which is insecure.
+		 Affected argument(s) used the following variable(s): [dockerHubPass]
+		 See https://jenkins.io/redirect/groovy-string-interpolation for details.
++ docker login -u anirudhadak2 -p ****
+WARNING! Using --password via the CLI is insecure. Use --password-stdin.
+WARNING! Your password will be stored unencrypted in /var/lib/jenkins/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[Pipeline] sh
++ docker build -t taxigrabber .
+#2 [internal] load .dockerignore
+#2 transferring context: 2B done
+#2 DONE 0.0s
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 86B done
+#1 DONE 0.1s
+
+#3 [internal] load metadata for docker.io/library/httpd:2.4
+#3 DONE 0.8s
+
+#5 [internal] load build context
+#5 transferring context: 18.44kB 0.0s done
+#5 DONE 0.0s
+
+#6 [1/2] FROM docker.io/library/httpd:2.4@sha256:ed6db4a8c394d075c9c59a3dbd61a3818cd302d9948057f1e19046e5bffec027
+#6 CACHED
+
+#4 [2/2] COPY . /usr/local/apache2/htdocs/
+#4 DONE 0.2s
+
+#7 exporting to image
+#7 exporting layers 0.1s done
+#7 writing image sha256:b657500c63186e5eaf24e3b8862a7992119a94fde8f3749d632697aae9013e71 done
+#7 naming to docker.io/library/taxigrabber 0.0s done
+#7 DONE 0.2s
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Push DockerImage to DockrHub)
+[Pipeline] withCredentials
+Masking supported pattern matches of $dockerHubPass
+[Pipeline] {
+[Pipeline] sh
+Warning: A secret was passed to "sh" using Groovy String interpolation, which is insecure.
+		 Affected argument(s) used the following variable(s): [dockerHubPass]
+		 See https://jenkins.io/redirect/groovy-string-interpolation for details.
++ docker login -u anirudhadak2 -p ****
+WARNING! Using --password via the CLI is insecure. Use --password-stdin.
+WARNING! Your password will be stored unencrypted in /var/lib/jenkins/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[Pipeline] sh
++ docker images
+REPOSITORY             TAG           IMAGE ID       CREATED          SIZE
+taxigrabber            latest        b657500c6318   4 seconds ago    180MB
+anirudhadak2/new-app   taxigrabber   46fb85c01d1c   2 minutes ago    180MB
+taxi-graber            latest        e07515e538f4   7 minutes ago    180MB
+<none>                 <none>        7fdd4fe33c0a   11 minutes ago   180MB
+imag                   latest        c8c165839ca0   19 minutes ago   180MB
+[Pipeline] sh
++ docker tag taxigrabber anirudhadak2/new-app:taxigrabber
+[Pipeline] sh
++ docker push anirudhadak2/new-app:taxigrabber
+The push refers to repository [docker.io/anirudhadak2/new-app]
+863d847624b6: Preparing
+b7094d4685d5: Preparing
+87ca57c6f4e9: Preparing
+1343ea427053: Preparing
+8db3e477577e: Preparing
+cb4596cc1454: Preparing
+cb4596cc1454: Waiting
+8db3e477577e: Layer already exists
+b7094d4685d5: Layer already exists
+1343ea427053: Layer already exists
+87ca57c6f4e9: Layer already exists
+cb4596cc1454: Layer already exists
+863d847624b6: Pushed
+taxigrabber: digest: sha256:a4ba90e579dec9d27426722505e51c2623eb4ce536f8a82f443db276d4cccbc8 size: 1578
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Deploy Using DOcker Compose)
+[Pipeline] sh
++ docker-compose down
+Removing network test2_default
+Network test2_default not found.
++ docker-compose up -d
+Creating network "test2_default" with the default driver
+Creating test2_web_1 ... 
+[1A[2K
+Creating test2_web_1 ... [32mdone[0m
+[1B
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
