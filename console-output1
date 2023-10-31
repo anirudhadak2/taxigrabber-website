@@ -1,0 +1,68 @@
+Started by user anirudha
+Running as SYSTEM
+Building in workspace /var/lib/jenkins/workspace/test1
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/test1/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/anirudhadak2/taxigrabber-website.git # timeout=10
+Fetching upstream changes from https://github.com/anirudhadak2/taxigrabber-website.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.25.1'
+ > git fetch --tags --force --progress -- https://github.com/anirudhadak2/taxigrabber-website.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+Checking out Revision 063df3c1272595c1fdd5cb1fdbf8d2eee01ae686 (refs/remotes/origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 063df3c1272595c1fdd5cb1fdbf8d2eee01ae686 # timeout=10
+Commit message: "Create Dockerfile"
+First time build. Skipping changelog.
+[test1] $ /bin/sh -xe /tmp/jenkins14020162856010146895.sh
++ mkdir -p /var/lib/jenkins/.docker/cli-plugins
++ curl -SL https://github.com/docker/buildx/releases/download/v0.6.3/buildx-v0.6.3.linux-amd64 -o /var/lib/jenkins/.docker/cli-plugins/docker-buildx
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+
+  0 58.4M    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100 58.4M  100 58.4M    0     0  37.2M      0  0:00:01  0:00:01 --:--:-- 88.9M
++ chmod a+x /var/lib/jenkins/.docker/cli-plugins/docker-buildx
++ docker build -t taxi-graber .
+#2 [internal] load .dockerignore
+#2 transferring context: 2B done
+#2 DONE 0.0s
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 86B 0.0s done
+#1 DONE 0.1s
+
+#3 [internal] load metadata for docker.io/library/httpd:2.4
+#3 DONE 0.7s
+
+#6 [1/2] FROM docker.io/library/httpd:2.4@sha256:ed6db4a8c394d075c9c59a3dbd61a3818cd302d9948057f1e19046e5bffec027
+#6 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 11.92MB 0.3s done
+#5 DONE 0.4s
+
+#6 [1/2] FROM docker.io/library/httpd:2.4@sha256:ed6db4a8c394d075c9c59a3dbd61a3818cd302d9948057f1e19046e5bffec027
+#6 CACHED
+
+#4 [2/2] COPY . /usr/local/apache2/htdocs/
+#4 DONE 0.2s
+
+#7 exporting to image
+#7 exporting layers
+#7 exporting layers 0.2s done
+#7 writing image sha256:7fdd4fe33c0a28efc8f63a522eca0653a9c8ea72c97bbf1df7f4a8140d14fba1 done
+#7 naming to docker.io/library/taxi-graber 0.0s done
+#7 DONE 0.3s
++ docker run -p 28080:80 --name taxi -d taxi-graber
+906550ad3dbdd1f51b1d01629fb9cbcbdcf513f5c66938fbdfdea654197ae535
++ docker ps
+CONTAINER ID   IMAGE         COMMAND              CREATED         STATUS                  PORTS                                     NAMES
+906550ad3dbd   taxi-graber   "httpd-foreground"   1 second ago    Up Less than a second   0.0.0.0:28080->80/tcp, :::28080->80/tcp   taxi
+01c4e975953d   imag          "httpd-foreground"   7 minutes ago   Up 7 minutes            0.0.0.0:18080->80/tcp, :::18080->80/tcp   sleepy_galois
+Finished: SUCCESS
