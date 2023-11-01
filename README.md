@@ -36,7 +36,7 @@ step2:  got to the
 
                  Username: anirudhadak2 (dockerhub username)
                  
-                 Password: AP@2772000
+                 Password: *********
 
                  ID  :  dockerhub
 
